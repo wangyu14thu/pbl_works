@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标生成器 - PBL探索APP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .canvas-container {
+            margin: 2rem 0;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .info {
+            text-align: left;
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        .btn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 PBL探索APP 图标生成器</h1>
+        <p>下面会自动生成各种尺寸的APP图标</p>
+        
+        <div class="canvas-container" id="canvas-container"></div>
+        
+        <button class="btn" onclick="downloadAll()">📥 下载所有图标</button>
+        
+        <div class="info">
+            <h3>📋 使用说明：</h3>
+            <ol>
+                <li>点击"下载所有图标"按钮</li>
+                <li>将下载的图标放到项目根目录</li>
+                <li>图标会自动应用到APP中</li>
+            </ol>
+            <p><strong>需要的尺寸：</strong> 72, 96, 128, 144, 152, 192, 384, 512</p>
+        </div>
+    </div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const container = document.getElementById('canvas-container');
+
+        // 为每个尺寸创建canvas
+        sizes.forEach(size => {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.id = `icon-${size}`;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(0.5, '#764ba2');
+            gradient.addColorStop(1, '#f093fb');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制圆角效果
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // 绘制emoji图标
+            ctx.font = `${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎯', size / 2, size / 2);
+            
+            // 添加到页面
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'inline-block';
+            wrapper.style.margin = '10px';
+            
+            const label = document.createElement('p');
+            label.textContent = `${size}x${size}`;
+            label.style.margin = '5px 0';
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.textContent = '下载';
+            downloadBtn.className = 'btn';
+            downloadBtn.style.padding = '0.5rem 1rem';
+            downloadBtn.style.fontSize = '0.8rem';
+            downloadBtn.onclick = () => downloadIcon(canvas, size);
+            
+            wrapper.appendChild(canvas);
+            wrapper.appendChild(label);
+            wrapper.appendChild(downloadBtn);
+            container.appendChild(wrapper);
+        });
+
+        function downloadIcon(canvas, size) {
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function downloadAll() {
+            sizes.forEach((size, index) => {
+                setTimeout(() => {
+                    const canvas = document.getElementById(`icon-${size}`);
+                    downloadIcon(canvas, size);
+                }, index * 200);
+            });
+        }
+    </script>
+</body>
+</html>
+

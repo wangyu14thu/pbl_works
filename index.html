@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="基于PBL理念的职业角色扮演学习平台，适合小学1-6年级学生">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PBL探索">
+    
+    <title>PBL职业体验探索 - 成为你想成为的人</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon-192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-72.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-72.png">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 注册页面 -->
+    <div id="page-register" class="page active">
+        <div class="container">
+            <div class="header-logo">
+                <h1>🎯 PBL职业体验探索</h1>
+                <p class="subtitle">发现你的职业梦想，开启探索之旅</p>
+            </div>
+            
+            <div class="register-form">
+                <div class="form-group">
+                    <label for="nickname">昵称</label>
+                    <input type="text" id="nickname" placeholder="请输入你的昵称">
+                </div>
+                
+                <div class="form-group">
+                    <label>性别</label>
+                    <div class="gender-select">
+                        <button type="button" class="gender-btn" data-gender="male">
+                            <span class="icon">👦</span>
+                            <span>男生</span>
+                        </button>
+                        <button type="button" class="gender-btn" data-gender="female">
+                            <span class="icon">👧</span>
+                            <span>女生</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grade">年级</label>
+                    <select id="grade">
+                        <option value="">请选择年级</option>
+                        <option value="1">一年级</option>
+                        <option value="2">二年级</option>
+                        <option value="3">三年级</option>
+                        <option value="4">四年级</option>
+                        <option value="5">五年级</option>
+                        <option value="6">六年级</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="school">学校</label>
+                    <input type="text" id="school" placeholder="请输入学校名称">
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">所在城市</label>
+                    <input type="text" id="city" placeholder="请输入所在城市">
+                </div>
+                
+                <button class="btn-primary" id="btn-register">开始探索之旅 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 角色选择页面 -->
+    <div id="page-roles" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2>选择你想扮演的职业角色</h2>
+                <p class="welcome-text">你好，<span id="welcome-name"></span>！请选择一个你感兴趣的职业角色</p>
+            </div>
+            
+            <div class="roles-container" id="roles-container">
+                <!-- 角色卡片将通过JS动态生成 -->
+            </div>
+            
+            <button class="btn-secondary" id="btn-back-to-register">← 返回修改信息</button>
+        </div>
+    </div>
+
+    <!-- 加载动画页面 -->
+    <div id="page-loading" class="page">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">身份同步中...</p>
+            <p class="loading-subtext">正在为你匹配专属任务</p>
+        </div>
+    </div>
+
+    <!-- 项目详情页面 -->
+    <div id="page-project-detail" class="page">
+        <div class="container">
+            <div class="identity-banner">
+                <div class="identity-icon">🎭</div>
+                <p class="identity-text">
+                    <span id="detail-nickname"></span>，你当前的身份是：
+                    <strong id="detail-role"></strong>
+                </p>
+            </div>
+            
+            <div class="project-card">
+                <h2 class="project-title" id="project-title"></h2>
+                <div class="project-intro" id="project-intro"></div>
+                
+                <div class="role-skills">
+                    <h3>你将获得的核心能力</h3>
+                    <div class="skills-list" id="skills-list"></div>
+                </div>
+                
+                <button class="btn-primary btn-large" id="btn-start-guide">确认上岗，领取指南 →</button>
+                <button class="btn-secondary" id="btn-back-to-roles">← 重新选择角色</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 项目指南页面 -->
+    <div id="page-guide" class="page">
+        <div class="container">
+            <div class="guide-header">
+                <h2 id="guide-title"></h2>
+                <div class="progress-nav" id="progress-nav">
+                    <div class="progress-step" data-step="1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">观察</div>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">思考</div>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">行动</div>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">分享</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 1: 观察与发现 -->
+            <div class="guide-step" id="step-1">
+                <div class="step-content">
+                    <h3>🔍 Step 1: 观察与发现</h3>
+                    <p class="task-text" id="step1-task"></p>
+                    
+                    <div class="interaction-area">
+                        <label class="upload-label">📸 上传你选定的"建房地址"照片</label>
+                        <div class="upload-area" id="upload-step1">
+                            <input type="file" id="file-step1" accept="image/*" hidden>
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">+</span>
+                                <span>点击上传照片</span>
+                            </div>
+                            <img class="preview-image" id="preview-step1" style="display:none;">
+                        </div>
+                        
+                        <label class="input-label">📝 简短说明你选择这里的理由</label>
+                        <textarea id="textarea-step1" placeholder="例如：这里有遮挡，且离水源近..." rows="4"></textarea>
+                        
+                        <button class="btn-primary" id="btn-next-step2">下一步 →</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: 学习与思考 -->
+            <div class="guide-step" id="step-2" style="display:none;">
+                <div class="step-content">
+                    <h3>💡 Step 2: 学习与思考</h3>
+                    
+                    <div class="knowledge-capsule">
+                        <div class="capsule-icon">📚</div>
+                        <div class="capsule-content">
+                            <h4>知识胶囊</h4>
+                            <p id="step2-knowledge"></p>
+                        </div>
+                    </div>
+                    
+                    <p class="task-text" id="step2-task"></p>
+                    
+                    <div class="interaction-area">
+                        <label class="input-label">请列出3种适合的材料</label>
+                        <input type="text" id="material1" placeholder="材料1：" class="material-input">
+                        <input type="text" id="material2" placeholder="材料2：" class="material-input">
+                        <input type="text" id="material3" placeholder="材料3：" class="material-input">
+                        
+                        <button class="btn-primary" id="btn-next-step3">下一步 →</button>
+                        <button class="btn-secondary" id="btn-back-step1">← 上一步</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: 行动与创作 -->
+            <div class="guide-step" id="step-3" style="display:none;">
+                <div class="step-content">
+                    <h3>🎨 Step 3: 行动与创作</h3>
+                    <p class="task-text" id="step3-task"></p>
+                    
+                    <div class="interaction-area">
+                        <label class="upload-label">📸 上传你的设计草图或制作过程照片</label>
+                        <div class="upload-area" id="upload-step3">
+                            <input type="file" id="file-step3" accept="image/*" hidden>
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">+</span>
+                                <span>点击上传照片</span>
+                            </div>
+                            <img class="preview-image" id="preview-step3" style="display:none;">
+                        </div>
+                        
+                        <button class="btn-primary" id="btn-next-step4">下一步 →</button>
+                        <button class="btn-secondary" id="btn-back-step2">← 上一步</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: 分享与迭代 -->
+            <div class="guide-step" id="step-4" style="display:none;">
+                <div class="step-content">
+                    <h3>🌟 Step 4: 分享与迭代</h3>
+                    <p class="task-text" id="step4-task"></p>
+                    
+                    <div class="interaction-area">
+                        <label class="input-label">✍️ 写下一句你想对这些小生命说的话...</label>
+                        <textarea id="textarea-step4" placeholder="分享你的感受和想法..." rows="4"></textarea>
+                        
+                        <button class="btn-primary" id="btn-complete">完成项目 🎉</button>
+                        <button class="btn-secondary" id="btn-back-step3">← 上一步</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完成弹窗 -->
+    <div id="medal-modal" class="modal">
+        <div class="modal-content">
+            <div class="medal-container">
+                <div class="medal-icon">🏅</div>
+                <h2>恭喜你！</h2>
+                <p class="medal-title" id="medal-title">初级自然守护者</p>
+                <p class="medal-desc">你成功完成了一次生命关怀行动！</p>
+                <button class="btn-primary" id="btn-close-modal">继续探索其他职业 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- PWA安装提示 -->
+    <div id="install-prompt" class="install-prompt" style="display: none;">
+        <div class="install-content">
+            <div class="install-icon">📱</div>
+            <h3>安装PBL探索APP</h3>
+            <p>添加到主屏幕，随时随地学习！</p>
+            <div class="install-buttons">
+                <button class="btn-primary" id="btn-install">立即安装</button>
+                <button class="btn-secondary" id="btn-install-later">稍后</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PWA注册脚本 -->
+    <script>
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker 注册成功:', registration.scope);
+                        
+                        // 检查更新
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 新版本可用，请刷新页面');
+                                    // 可以在这里添加提示用户更新的UI
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker 注册失败:', error);
+                    });
+            });
+        }
+
+        // PWA安装提示
+        let deferredPrompt;
+        const installPrompt = document.getElementById('install-prompt');
+        const btnInstall = document.getElementById('btn-install');
+        const btnLater = document.getElementById('btn-install-later');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // 阻止默认的安装提示
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // 延迟3秒后显示自定义安装提示
+            setTimeout(() => {
+                installPrompt.style.display = 'flex';
+            }, 3000);
+        });
+
+        btnInstall.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                return;
+            }
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            console.log(`用户选择: ${outcome}`);
+            deferredPrompt = null;
+            installPrompt.style.display = 'none';
+        });
+
+        btnLater.addEventListener('click', () => {
+            installPrompt.style.display = 'none';
+        });
+
+        // 检测是否已安装
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA 已安装成功！');
+            installPrompt.style.display = 'none';
+        });
+
+        // iOS安装提示
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+        if (isIOS && !isInStandaloneMode) {
+            setTimeout(() => {
+                if (!localStorage.getItem('ios-install-prompt-shown')) {
+                    const iosPrompt = confirm('💡 提示：在Safari浏览器中点击"分享"按钮，然后选择"添加到主屏幕"，即可像APP一样使用本应用！');
+                    if (iosPrompt) {
+                        localStorage.setItem('ios-install-prompt-shown', 'true');
+                    }
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+
