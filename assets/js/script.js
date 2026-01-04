@@ -17,7 +17,7 @@ const rolesData = {
             id: 'R001',
             name: '自然守护者',
             icon: '🌿',
-            image: '自然守护者.png',
+            image: 'assets/images/roles/自然守护者.png',
             projectId: 'P301',
             tags: ['深度观察', '绿色设计', '共情行动'],
             description: '守护自然，关怀生命'
@@ -26,7 +26,7 @@ const rolesData = {
             id: 'R002',
             name: '未来工程师',
             icon: '⚙️',
-            image: '少年工程师.png',
+            image: 'assets/images/roles/少年工程师.png',
             projectId: 'P302',
             tags: ['创意思维', '动手实践', '问题解决'],
             description: '用科技改变世界'
@@ -35,7 +35,7 @@ const rolesData = {
             id: 'R003',
             name: '少年CEO',
             icon: '💼',
-            image: '少年CEO.png',
+            image: 'assets/images/roles/少年CEO.png',
             projectId: 'P303',
             tags: ['商业思维', '沟通协调', '创新能力'],
             description: '领导团队，创造价值'
@@ -44,7 +44,7 @@ const rolesData = {
             id: 'R004',
             name: '文化策展人',
             icon: '🎨',
-            image: '文化策展人.png',
+            image: 'assets/images/roles/文化策展人.png',
             projectId: 'P304',
             tags: ['文化传承', '审美鉴赏', '策划能力'],
             description: '发现传统，传播美好'
@@ -53,7 +53,7 @@ const rolesData = {
             id: 'R005',
             name: '游戏策划师',
             icon: '🎮',
-            image: '游戏策划师.png',
+            image: 'assets/images/roles/游戏策划师.png',
             projectId: 'P305',
             tags: ['创意设计', '规则制定', '趣味思维'],
             description: '设计快乐，创造欢笑'

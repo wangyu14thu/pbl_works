@@ -3,14 +3,14 @@ const CACHE_NAME = 'pbl-app-v1.0.0';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/style.css',
-  '/script.js',
+  '/assets/css/style.css',
+  '/assets/js/script.js',
   '/manifest.json',
-  '/自然守护者.png',
-  '/少年工程师.png',
-  '/少年CEO.png',
-  '/文化策展人.png',
-  '/游戏策划师.png'
+  '/assets/images/roles/自然守护者.png',
+  '/assets/images/roles/少年工程师.png',
+  '/assets/images/roles/少年CEO.png',
+  '/assets/images/roles/文化策展人.png',
+  '/assets/images/roles/游戏策划师.png'
 ];
 
 // 安装Service Worker
