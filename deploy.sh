@@ -94,30 +94,100 @@ case $choice in
         read -p "仓库名称: " repo_name
         
         echo ""
-        echo "执行以下命令："
+        echo "⚠️  请确保你已在GitHub上创建了仓库: $repo_name"
+        echo "   如未创建，请访问: https://github.com/new"
         echo ""
-        echo "git init"
-        echo "git add ."
-        echo "git commit -m 'Deploy PBL PWA'"
-        echo "git branch -M main"
-        echo "git remote add origin https://github.com/$github_user/$repo_name.git"
-        echo "git push -u origin main"
-        echo ""
-        echo "然后在GitHub仓库设置中启用Pages"
-        echo "访问地址将是: https://$github_user.github.io/$repo_name/"
-        echo ""
-        read -p "是否现在执行？(y/n) " -n 1 -r
+        read -p "仓库已创建？继续部署 (y/n): " -n 1 -r
         echo
         
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "👋 请先创建仓库后再部署"
+            exit 0
+        fi
+        
+        echo ""
+        echo "开始部署..."
+        echo ""
+        
+        # 初始化Git（如果还未初始化）
+        if [ ! -d ".git" ]; then
+            echo "📝 初始化Git仓库..."
             git init
-            git add .
-            git commit -m "Deploy PBL PWA"
+        else
+            echo "✓ Git仓库已存在"
+        fi
+        
+        # 添加所有文件
+        echo "📦 添加文件..."
+        git add .
+        
+        # 检查是否有更改需要提交
+        if git diff-index --quiet HEAD --; then
+            echo "✓ 没有新的更改需要提交"
+        else
+            echo "📝 提交更改..."
+            git commit -m "Deploy PBL PWA - $(date +%Y-%m-%d)"
+        fi
+        
+        # 确保在main分支
+        current_branch=$(git branch --show-current)
+        if [ "$current_branch" != "main" ]; then
+            echo "🔀 切换到main分支..."
             git branch -M main
-            git remote add origin "https://github.com/$github_user/$repo_name.git"
-            git push -u origin main
+        else
+            echo "✓ 已在main分支"
+        fi
+        
+        # 处理remote
+        repo_url="https://github.com/$github_user/$repo_name.git"
+        
+        if git remote | grep -q "^origin$"; then
+            echo "🔄 更新remote地址..."
+            git remote remove origin
+            git remote add origin "$repo_url"
+        else
+            echo "➕ 添加remote..."
+            git remote add origin "$repo_url"
+        fi
+        
+        # 推送到GitHub
+        echo ""
+        echo "🚀 推送到GitHub..."
+        echo "   仓库地址: $repo_url"
+        echo ""
+        
+        if git push -u origin main 2>&1; then
             echo ""
-            echo "✅ 推送完成！请在GitHub启用Pages"
+            echo "✅ 部署成功！"
+            echo ""
+            echo "📋 下一步操作："
+            echo "1. 访问: https://github.com/$github_user/$repo_name/settings/pages"
+            echo "2. 在 'Source' 中选择 'main' 分支"
+            echo "3. 点击 'Save'"
+            echo "4. 等待几分钟后访问:"
+            echo ""
+            echo "   🌐 https://$github_user.github.io/$repo_name/"
+            echo ""
+        else
+            echo ""
+            echo "❌ 推送失败！"
+            echo ""
+            echo "可能的原因："
+            echo "1. 仓库 '$repo_name' 不存在"
+            echo "   → 请在GitHub创建: https://github.com/new"
+            echo ""
+            echo "2. 没有推送权限"
+            echo "   → 请配置GitHub访问令牌"
+            echo "   → 或使用SSH: git@github.com:$github_user/$repo_name.git"
+            echo ""
+            echo "3. 需要先设置Git用户信息"
+            echo "   → git config --global user.name \"你的名字\""
+            echo "   → git config --global user.email \"你的邮箱\""
+            echo ""
+            echo "💡 手动部署步骤："
+            echo "   git remote set-url origin git@github.com:$github_user/$repo_name.git"
+            echo "   git push -u origin main"
+            exit 1
         fi
         ;;
         
