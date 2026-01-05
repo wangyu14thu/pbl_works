@@ -2,12 +2,26 @@
 
 # PBL职业体验探索 - PWA部署脚本
 
+# 获取脚本所在目录的父目录（项目根目录）
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# 切换到项目根目录
+cd "$PROJECT_ROOT" || exit 1
+
 echo "🚀 开始部署PBL职业体验探索PWA..."
+echo "📂 项目目录: $PROJECT_ROOT"
 echo ""
 
 # 检查必要文件
 echo "📋 检查文件完整性..."
-files=("index.html" "style.css" "script.js" "manifest.json" "service-worker.js")
+files=(
+    "index.html"
+    "assets/css/style.css"
+    "assets/js/script.js"
+    "manifest.json"
+    "service-worker.js"
+)
 missing_files=()
 
 for file in "${files[@]}"; do
@@ -40,7 +54,7 @@ if [ ${#missing_icons[@]} -gt 0 ]; then
     echo "⚠️  缺少以下图标文件："
     printf '%s\n' "${missing_icons[@]}"
     echo ""
-    echo "💡 请先打开 icon-generator.html 生成图标"
+    echo "💡 请先打开 tools/icon-generator.html 生成图标"
     read -p "是否继续部署？(y/n) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -122,7 +136,7 @@ case $choice in
         git add .
         
         # 检查是否有更改需要提交
-        if git diff-index --quiet HEAD --; then
+        if git diff-index --quiet HEAD -- 2>/dev/null; then
             echo "✓ 没有新的更改需要提交"
         else
             echo "📝 提交更改..."
@@ -130,7 +144,7 @@ case $choice in
         fi
         
         # 确保在main分支
-        current_branch=$(git branch --show-current)
+        current_branch=$(git branch --show-current 2>/dev/null || echo "main")
         if [ "$current_branch" != "main" ]; then
             echo "🔀 切换到main分支..."
             git branch -M main
@@ -160,33 +174,57 @@ case $choice in
             echo ""
             echo "✅ 部署成功！"
             echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "📋 下一步操作："
-            echo "1. 访问: https://github.com/$github_user/$repo_name/settings/pages"
-            echo "2. 在 'Source' 中选择 'main' 分支"
-            echo "3. 点击 'Save'"
-            echo "4. 等待几分钟后访问:"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo ""
+            echo "1️⃣  启用GitHub Pages："
+            echo "   访问: https://github.com/$github_user/$repo_name/settings/pages"
+            echo ""
+            echo "2️⃣  配置Pages："
+            echo "   - Source: 选择 'Deploy from a branch'"
+            echo "   - Branch: 选择 'main' 和 '/ (root)'"
+            echo "   - 点击 'Save'"
+            echo ""
+            echo "3️⃣  等待部署（约2-5分钟）"
+            echo ""
+            echo "4️⃣  访问你的PWA应用："
             echo "   🌐 https://$github_user.github.io/$repo_name/"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo ""
         else
             echo ""
             echo "❌ 推送失败！"
             echo ""
-            echo "可能的原因："
-            echo "1. 仓库 '$repo_name' 不存在"
-            echo "   → 请在GitHub创建: https://github.com/new"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🔧 故障排除："
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo ""
-            echo "2. 没有推送权限"
-            echo "   → 请配置GitHub访问令牌"
-            echo "   → 或使用SSH: git@github.com:$github_user/$repo_name.git"
+            echo "问题1: Authentication failed (认证失败)"
+            echo "解决方案："
+            echo "   • GitHub现在需要使用Personal Access Token"
+            echo "   • 创建Token: https://github.com/settings/tokens"
+            echo "   • 选择 'repo' 权限"
+            echo "   • 使用Token代替密码"
             echo ""
-            echo "3. 需要先设置Git用户信息"
-            echo "   → git config --global user.name \"你的名字\""
-            echo "   → git config --global user.email \"你的邮箱\""
+            echo "问题2: Repository not found (仓库未找到)"
+            echo "解决方案："
+            echo "   • 确认仓库已创建: https://github.com/$github_user/$repo_name"
+            echo "   • 检查仓库名拼写是否正确"
+            echo "   • 确认仓库为Public"
             echo ""
-            echo "💡 手动部署步骤："
+            echo "问题3: 权限问题"
+            echo "解决方案："
+            echo "   使用SSH代替HTTPS:"
             echo "   git remote set-url origin git@github.com:$github_user/$repo_name.git"
             echo "   git push -u origin main"
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            echo "💡 快速修复："
+            echo "   cd tools && ./fix-github-deploy.sh"
+            echo ""
             exit 1
         fi
         ;;
@@ -199,7 +237,7 @@ case $choice in
         zip_name="pbl-pwa-${timestamp}.zip"
         
         if command -v zip &> /dev/null; then
-            zip -r "$zip_name" . -x "*.git*" "*.DS_Store" "deploy.sh" "*.md"
+            zip -r "$zip_name" . -x "*.git*" "*.DS_Store" "tools/*" "docs/*" "*.md" "CLEANUP-REPORT.md" "FILE-STRUCTURE.md"
             echo "✅ 部署包已生成: $zip_name"
             echo ""
             echo "📤 可以将此文件上传到："
@@ -208,13 +246,14 @@ case $choice in
             echo "   - 或您的服务器"
         else
             echo "⚠️  未找到zip命令，手动打包以下文件："
+            echo "   核心文件:"
             echo "   - index.html"
-            echo "   - style.css"
-            echo "   - script.js"
             echo "   - manifest.json"
             echo "   - service-worker.js"
-            echo "   - icon-*.png (所有图标)"
-            echo "   - *.png (角色图片)"
+            echo "   资源文件夹:"
+            echo "   - assets/"
+            echo "   图标文件:"
+            echo "   - icon-*.png (如果已生成)"
         fi
         ;;
         
@@ -231,4 +270,3 @@ esac
 
 echo ""
 echo "🎉 完成！"
-

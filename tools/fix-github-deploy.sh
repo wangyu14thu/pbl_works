@@ -2,7 +2,15 @@
 
 # GitHub Pages 快速修复和部署脚本
 
+# 获取脚本所在目录的父目录（项目根目录）
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# 切换到项目根目录
+cd "$PROJECT_ROOT" || exit 1
+
 echo "🔧 GitHub Pages 部署修复工具"
+echo "📂 项目目录: $PROJECT_ROOT"
 echo ""
 
 # 获取仓库信息
