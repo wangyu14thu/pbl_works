@@ -449,6 +449,13 @@ body::after {
     transform: scale(1.02);
 }
 
+.form-group select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.6;
+    color: #999;
+}
+
 /* 性别选择 */
 .gender-select {
     display: flex;
@@ -1038,6 +1045,347 @@ body::after {
     }
     50% {
         opacity: 0.5;
+    }
+}
+
+/* 项目选择页面（三选一） */
+.select-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    backdrop-filter: blur(20px);
+    padding: 1.5rem 2.5rem;
+    border-radius: 50px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 0 60px rgba(138, 180, 248, 0.3);
+    border: 3px solid rgba(255, 107, 157, 0.3);
+    margin-bottom: 2rem;
+    animation: badge-float 3s ease-in-out infinite;
+}
+
+@keyframes badge-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.role-icon-large {
+    font-size: 3rem;
+    display: inline-block;
+    animation: icon-rotate 4s ease-in-out infinite;
+}
+
+@keyframes icon-rotate {
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+}
+
+.role-name-large {
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.select-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 
+        2px 2px 0px #ff6b9d,
+        4px 4px 0px #ffa06b,
+        6px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.select-title span {
+    color: #ffcc00;
+}
+
+.select-subtitle {
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.select-subtitle strong {
+    color: #ffcc00;
+    font-size: 1.3rem;
+}
+
+/* 项目卡片容器 */
+.projects-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 0 30px rgba(138, 180, 248, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    flex: 1;
+    max-width: 32%;
+}
+
+.project-card::before {
+    content: '⭐';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0);
+    transition: all 0.4s;
+    z-index: 10;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+    animation: twinkle-project 1s ease-in-out infinite;
+}
+
+@keyframes twinkle-project {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.project-card:hover {
+    transform: translateY(-10px) scale(1.03) translateZ(20px);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.12),
+        0 0 60px rgba(255, 107, 157, 0.3);
+    border-color: #ff6b9d;
+}
+
+.project-card.selected {
+    border-color: #4cd964;
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.15),
+        0 0 60px rgba(76, 217, 100, 0.5);
+    transform: scale(1.02);
+}
+
+.project-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.project-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.project-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: white;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.project-difficulty {
+    margin-top: 0.3rem;
+    font-size: 1rem;
+}
+
+.project-body {
+    padding: 1.2rem;
+}
+
+.project-challenge {
+    margin-bottom: 1rem;
+}
+
+.project-challenge-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ff6b9d;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.project-challenge-title::before {
+    content: '🎯';
+    font-size: 1rem;
+}
+
+.project-challenge-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+.project-mission {
+    margin-bottom: 1rem;
+}
+
+.project-mission-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #5ac8fa;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.project-mission-title::before {
+    content: '🚀';
+    font-size: 1rem;
+}
+
+.project-mission-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.project-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+}
+
+.project-keyword {
+    background: linear-gradient(135deg, #ffe6f0 0%, #ffd6e7 100%);
+    color: #ff6b9d;
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 2px solid #ff6b9d;
+}
+
+.project-keyword:nth-child(1) {
+    background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+    color: #5ac8fa;
+    border-color: #5ac8fa;
+}
+
+.project-keyword:nth-child(2) {
+    background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+    color: #ffa06b;
+    border-color: #ffa06b;
+}
+
+.project-keyword:nth-child(3) {
+    background: linear-gradient(135deg, #e6ffe6 0%, #b3ffb3 100%);
+    color: #4cd964;
+    border-color: #4cd964;
+}
+
+.project-select-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #4cd964 0%, #5ac8fa 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.8rem;
+}
+
+.project-select-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 217, 100, 0.4);
+}
+
+.project-card.selected .project-select-btn {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%);
+}
+
+/* 响应式 - 项目选择页 */
+@media (max-width: 1024px) {
+    .projects-container {
+        flex-direction: column;
+    }
+    
+    .project-card {
+        max-width: 100%;
+    }
+    
+    .select-title {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .select-header {
+        margin-bottom: 2rem;
+    }
+    
+    .role-badge {
+        padding: 1rem 2rem;
+    }
+    
+    .role-name-large {
+        font-size: 1.5rem;
+    }
+    
+    .select-title {
+        font-size: 1.4rem;
+    }
+    
+    .select-subtitle {
+        font-size: 1rem;
+    }
+    
+    .project-title {
+        font-size: 1.2rem;
+    }
+    
+    .project-challenge-text,
+    .project-mission-text {
+        font-size: 0.85rem;
     }
 }
 

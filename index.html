@@ -24,6 +24,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="icon-72.png">
     
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/china-cities.js"></script>
 </head>
 <body>
     <!-- 注册页面 -->
@@ -73,8 +74,17 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="city">所在城市</label>
-                    <input type="text" id="city" placeholder="请输入所在城市">
+                    <label for="province">省份</label>
+                    <select id="province">
+                        <option value="">请选择省份</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">城市</label>
+                    <select id="city" disabled>
+                        <option value="">请先选择省份</option>
+                    </select>
                 </div>
                 
                 <button class="btn-primary" id="btn-register">开始探索之旅 →</button>
@@ -104,6 +114,28 @@
             <div class="loading-spinner"></div>
             <p class="loading-text">身份同步中...</p>
             <p class="loading-subtext">正在为你匹配专属任务</p>
+        </div>
+    </div>
+
+    <!-- 项目选择页面（三选一） -->
+    <div id="page-project-select" class="page">
+        <div class="container">
+            <div class="select-header">
+                <div class="role-badge">
+                    <span class="role-icon-large" id="select-role-icon"></span>
+                    <span class="role-name-large" id="select-role-name"></span>
+                </div>
+                <h2 class="select-title">
+                    你好，<span id="select-grade"></span>的<span id="select-role-title"></span>！
+                </h2>
+                <p class="select-subtitle">地球总部发来 <strong>3 项紧急挑战</strong>，请选择一项你最想开启的使命：</p>
+            </div>
+            
+            <div class="projects-container" id="projects-container">
+                <!-- 项目卡片将通过JS动态生成 -->
+            </div>
+            
+            <button class="btn-secondary" id="btn-back-to-roles-from-select">← 重新选择角色</button>
         </div>
     </div>
 

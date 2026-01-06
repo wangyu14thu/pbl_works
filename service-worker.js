@@ -1,10 +1,11 @@
 // Service Worker for PWA
-const CACHE_NAME = 'pbl-app-v1.0.0';
+const CACHE_NAME = 'pbl-app-v2.0.0';
 const urlsToCache = [
   '/',
   '/index.html',
   '/assets/css/style.css',
   '/assets/js/script.js',
+  '/assets/js/china-cities.js',
   '/manifest.json',
   '/assets/images/roles/自然守护者.png',
   '/assets/images/roles/少年工程师.png',
